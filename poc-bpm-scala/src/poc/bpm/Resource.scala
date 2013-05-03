@@ -4,10 +4,10 @@ package poc.bpm
 
 class Resource {
 
-  var operations: Set[Operation[_, _]] = Set();
+  var operations = Set.empty[Operation[_, _]]
 
   def addOperation(operation: Operation[_, _]) {
-    this.operations += operation;
+    operations += operation
   }
 
 }

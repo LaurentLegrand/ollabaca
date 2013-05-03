@@ -6,32 +6,24 @@ import poc.bpm.Participant
 
 class BreakManagement(resource: Break) extends Activity {
 
-  object validateBreak extends Action[Boolean, Void](this, () => this.resource.cancel.isEnabled || this.resource.reject.isEnabled,
-    this.doValidateBreak);
+  object validateBreak extends Action[Boolean, Unit](this, resource.cancel.isEnabled || resource.reject.isEnabled, doValidateBreak)
+  object closeBreak extends Action[Unit, Unit](this, resource.close.isEnabled, todo)
+  object cancelBreak extends Action[Unit, Unit](this, resource.cancel.isEnabled, todo)
 
-  object closeBreak extends Action[Void, Void](this, () => this.resource.close.isEnabled(),
-    this.todo);
+  object Operator extends Participant[Operator](this)
 
-  object cancelBreak extends Action[Void, Void](this, () => this.resource.cancel.isEnabled(),
-    this.todo);
+  object Supervisor extends Participant[Supervisor](this)
 
-  object Operator extends Participant[Operator](this);
+  Operator.grant(cancelBreak, closeBreak)
+  Supervisor.grant(validateBreak)
 
-  object Supervisor extends Participant[Supervisor](this);
-
-  this.Operator.grant(this.cancelBreak, this.closeBreak);
-  this.Supervisor.grant(this.validateBreak);
-
-  def doValidateBreak(accept: Boolean): Void = {
+  def doValidateBreak(accept: Boolean) {
     if (accept) {
-      this.resource.accept.invoke(null);
+      resource.accept.invoke(null)
     } else {
-      this.resource.reject.invoke(null);
+      resource.reject.invoke(null)
     }
-    return null;
   }
 
-  def todo(void: Void): Void = {
-    return null
-  }
+  def todo(void: Unit) {}
 }
