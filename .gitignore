@@ -1,0 +1,23 @@
+bin/
+*.class
+
+.cache 
+
+.classpath
+.project
+.settings/
+
+# Scala-IDE specific
+.scala_dependencies
+.worksheet
+.scalastyle
+
+
+# vi(m) specific
+*~
+*.sw?
+
+
+# git temp files
+*.orig
+

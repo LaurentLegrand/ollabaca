@@ -4,7 +4,7 @@ import scala.concurrent.Future
 
 abstract class Operation[I, O](
   resource: Resource,
-  precondition: () => Boolean,
+  precondition: => Boolean,
   body: I => O) {
 
   resource.addOperation(this)
@@ -15,8 +15,6 @@ abstract class Operation[I, O](
     return null
   }
 
-  def isEnabled(): Boolean = {
-    return this.precondition()
-  }
+  def isEnabled: Boolean = precondition
 
 }
