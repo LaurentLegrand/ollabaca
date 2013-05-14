@@ -1,38 +1,38 @@
 package poc.bpm
 
-class Participant[R <: Role](activity: Activity) {
+class Participant[R <: Role](val activity: Activity) {
+  
+  activity.addParticipant(this)
 
-  object Set_ extends Operation[R, Void](this.activity, () => true, this.doSet);
+  object set extends Operation[R, Unit](activity, true, doSet)
 
-  object Unset extends Operation[R, Void](this.activity, () => this.role != null, this.doUnset);
+  object unset extends Operation[R, Unit](activity, role != null, doUnset)
 
-  var role: Option[R] = None;
+  var role: Option[R] = None
 
-  var actions: Set[Action[_, _]] = Set();
+  var actions = Set.empty[Action[_, _]]
 
-  def grant(action: Action[_, _]*) = {
-    this.actions ++= action;
+  def grant(action: Action[_, _]*) {
+    actions ++= action
   }
 
-  def deny(action: Action[_, _]*) = {
-    this.actions --= action;
+  def deny(action: Action[_, _]*) {
+    actions --= action
   }
 
-  def doSet(role: R): Void = {
-    if (this.role.isDefined) {
-      this.doUnset(this.role.get);
+  def doSet(r: R) {
+    if (role.isDefined) {
+      doUnset(role.get)
     }
-    if (role != null) {
-      this.role = Some(role);
-      this.role.get.Participate.invoke(this);
+    if (r != null) {
+      role = Some(r)
+      r.participate.call(this)
     }
-    return null;
   }
 
-  def doUnset(role: R): Void = {
-    this.role.get.StopParticipation.invoke(this);
-    this.role = null
-    return null
+  def doUnset(r: R) {
+    role.get.stopParticipation.call(this)
+    role = None
   }
 
 }

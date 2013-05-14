@@ -16,32 +16,18 @@ class Break extends Resource {
   /**
    * Initial state
    */
-  var state: State = Pending;
+  var state: State = Pending
 
-  object accept extends Operation[Void, Void](this, () => this.state == Pending, this.doAccept) {
+  object accept extends Operation[Unit, Unit](this, state == Pending, {_ => state = Accepted })
+  object cancel extends Operation[Unit, Unit](this, state == Accepted || state == Pending, doAccept)
+  object reject extends Operation[Unit, Unit](this, state == Pending, doAccept)
+  object close extends Operation[Unit, Unit](this, state == Accepted, doAccept)
 
-  }
-
-  object cancel extends Operation[Void, Void](this, () => this.state == Accepted || this.state == Pending, this.doAccept) {
-
-  }
-
-  object reject extends Operation[Void, Void](this, () => this.state == Pending, this.doAccept) {
-
-  }
-
-  object close extends Operation[Void, Void](this, () => this.state == Accepted, this.doAccept) {
-
-  }
-
-  //  object Reject extends Operation[Void, Void](this, () => true, null) {
+  //  object Reject extends Operation[Unit, Unit](this, () => true, null) {
   //
   //  }
 
-  def doAccept(void: Void): Void = {
-    this.state = Accepted;
-
-    return null;
+  def doAccept(u: Unit) {
+    state = Accepted
   }
-
 }

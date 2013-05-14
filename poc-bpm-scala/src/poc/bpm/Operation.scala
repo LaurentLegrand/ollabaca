@@ -1,22 +1,28 @@
 package poc.bpm
 
-import scala.concurrent.Future
+import scala.concurrent._
+import ExecutionContext.Implicits.global
+
+//import scala.concurrent.ops._
 
 abstract class Operation[I, O](
-  resource: Resource,
-  precondition: () => Boolean,
+  val resource: Resource,
+  precondition: => Boolean,
   body: I => O) {
 
   resource.addOperation(this)
 
-  def invoke(input: I): Future[O] = {
-    //return this.body(input)
-    // TODO
-    return null
+  def call(input: I): Future[O] = future {
+    execute(input)
   }
 
-  def isEnabled(): Boolean = {
-    return this.precondition()
+  private def execute(input: I): O = {
+    if (isEnabled)
+      body(input)
+    else
+      throw new Error("NOT ENABLED")
   }
+
+  def isEnabled: Boolean = precondition
 
 }

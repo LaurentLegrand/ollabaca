@@ -2,22 +2,20 @@ package poc.bpm
 
 class Role extends Resource {
 
-  object Participate extends Operation[Participant[_], Void](this, () => true, this.doParticipate);
+  object participate extends Operation[Participant[_], Unit](this, true, doParticipate)
 
-  object StopParticipation extends Operation[Participant[_], Void](this, () => true, this.doStopParticipation);
+  object stopParticipation extends Operation[Participant[_], Unit](this, true, doStopParticipation)
 
-  var participations: Set[Participant[_]] = Set();
+  var participations = Set.empty[Participant[_]]
 
-  //name: String;
+  //name: String
 
-  def doParticipate(participant: Participant[_]): Void = {
-    this.participations += participant;
-    return null;
+  def doParticipate(participant: Participant[_]) {
+    participations += participant
   }
 
-  def doStopParticipation(participant: Participant[_]): Void = {
-    this.participations -= participant;
-    return null;
+  def doStopParticipation(participant: Participant[_]) {
+    participations -= participant
   }
 
 }
