@@ -1,0 +1,15 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: Xtend-json
+Bundle-SymbolicName: xtend-json
+Bundle-Version: 1.0.0.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.7
+Require-Bundle: org.eclipse.uml2.uml;bundle-version="4.0.2",
+ org.eclipse.xtend.lib,
+ com.google.guava,
+ org.eclipse.xtext.xbase.lib,
+ org.junit
+Bundle-ClassPath: lib/javax.json-1.0-b06.jar,
+ lib/javax.json-api-1.0-b06.jar,
+ .
+
